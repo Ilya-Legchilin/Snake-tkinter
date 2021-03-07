@@ -68,38 +68,54 @@ class Snake():
             return
         else:
             self.direction = direction
-        
+
 
 def spawn_snake():
     pass
-    
-    
+
+
 def spawn_apple():
     pass  
-    
-    
+
+
 snake = Snake(2, 5, 2, 1)
 snake.set_direction(RIGHT)
 
+c_list = []
 
-frames = [[None]*20]*30
-for i in range(30):
-    x = i*10 / 290
-    for j in range(20):
-         y = j*10 / 190 + 0.002
-         frames[i][j] = Frame(root)
-         frames[i][j]['bg'] ='#FFFFFF'
-         a = frames[i][j]
-         a.place(relx=x,rely=y, relwidth=0.03279, relheight=0.0501)
+for i in range(20):
+    for j in range(30):
+        c = Canvas(root, bg='white', width=14, height=14)
+        c.grid(row=i, column=j, pady=1, padx=1)
+        c_list.append(c)
+            
 
+def paint_cell(i, j, color):
+    index = i*30 + j
+    a = c_list[index]
+    a.config(bg=color)
+    
 
-def timer_tick():
+for i in range(snake.length):
+    a = snake.position[i][0]
+    b = snake.position[i][1]
+    paint_cell(b, a, 'grey')
+    
+def update():
     empty = Label(root)
+    for i in range(snake.length):
+        a = snake.position[i][0]
+        b = snake.position[i][1]
+        paint_cell(b, a, 'white')
     snake.move()
-    print(snake.position)
-    empty.after(2000, timer_tick)
+    for i in range(snake.length):
+        a = snake.position[i][0]
+        b = snake.position[i][1]
+        paint_cell(b, a, 'grey')
+    empty.after(500, update)
+    
+update()
+    
 
-
-timer_tick()
 
 root.mainloop()
